@@ -4,16 +4,19 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
 
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// TODO: Import and use routes here
-// app.use('/api/expenses', expenseRoutes);
-// app.use('/api/auth', authRoutes);
+// Routes
+const expenseRoutes = require('./routes/expenses');
+app.use('/api/expenses', expenseRoutes);
 
-mongoose
-    .connect(process.env.MONGO_URI)
-    .then(() => app.listen(PORT, () => console.log(`Server running on port ${PORT}`)))
-    .catch(err => console.error(err));
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch((err) => console.error('MongoDB connection error:', err));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
